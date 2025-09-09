@@ -1,4 +1,4 @@
-# 🖼️ Computer Vision Project: Defect Detection  
+# Computer Vision Project: Defect Detection  
 
 This project implements **defect detection in mechanical components** using a **U-Net segmentation model**.  
 
@@ -10,7 +10,7 @@ It covers:
 
 ---
 
-## ⚙️ Environment Setup  
+## Environment Setup  
 
 This project was tested with the following environment:  
 
