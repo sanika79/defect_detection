@@ -1,14 +1,18 @@
-# Computer Vision Project: Defect Detection  
+# 🖼️ Computer Vision Project: Defect Detection  
 
-This project implements **Defect detection in mechanical components** using a **U-Net segmentation model**. 
+This project implements **defect detection in mechanical components** using a **U-Net segmentation model**.  
 
-It includes environment setup with Torch + CUDA support, dataset preprocessing, training, and inference.  
+It covers:  
+- Environment setup with Torch + CUDA support  
+- Dataset preprocessing  
+- Model training  
+- Inference  
 
 ---
 
-## Environment Setup  
+## ⚙️ Environment Setup  
 
-This project was tested in the following environment:  
+This project was tested with the following environment:  
 
 - **Python**: 3.12.10  
 - **Torch**: 2.2.2  
@@ -20,11 +24,9 @@ This project was tested in the following environment:
    ```bash
    git clone https://github.com/sanika79/defect_detection.git
    cd defect_detection
-(Optional) Set Python version with pyenv:
 
-bash
-Copy code
-pyenv local 3.12.10
+```bash
+pyenv local 3.12.10```bash
 Install dependencies with Poetry:
 
 bash
