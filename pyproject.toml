@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "bracket_black_unet"
+version = "0.1.0"
+description = "UNet segmentation training on bracket_black dataset"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+torch = {version = "2.2.2+cu118", source = "pytorch-cu118"}
+torchvision = {version = "0.17.2+cu118", source = "pytorch-cu118"}
+numpy = "<2.0"
+markupsafe = "^2.1.5"
+pillow = "^11.0.0"
+scikit-learn = "^1.7.1"
+pyyaml = "^6.0.2"
+pytorch-lightning = "^2.5.5"
+matplotlib = "^3.10.6"
+
+
+[[tool.poetry.source]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "secondary"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

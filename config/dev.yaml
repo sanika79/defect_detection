@@ -1,0 +1,5 @@
+# Config for external data (not packaged)
+data_dir: "data/anomaly_dataset"
+processed_data_dir: "data/processed"
+bracket_black_data_dir: "data/anomaly_dataset/bracket_black"
+processed_bracket_black_data_dir: "data/processed/bracket_black"
