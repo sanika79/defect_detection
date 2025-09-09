@@ -24,6 +24,7 @@ This project was tested with the following environment:
    ```bash
    git clone https://github.com/sanika79/defect_detection.git
    cd defect_detection
+   ```bash
 
 ```bash
 pyenv local 3.12.10```bash
