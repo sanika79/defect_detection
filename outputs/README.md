@@ -1,5 +1,6 @@
-## Hyperparamters
+### Hyperparamters used for Tests
 
+## Test 1
 - Loss function → BCE loss with positive weight + Dice loss
 - Value of positive weight - 3
 - Predictive threshold - 0.5
