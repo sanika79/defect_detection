@@ -45,7 +45,6 @@ This project was tested with the following environment:
 - Original dataset structure:
 
    ```bash
-   Copy code
    bracket_black/
    │── train/
    │    └── good/
