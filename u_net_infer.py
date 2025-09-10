@@ -9,6 +9,8 @@ import pytorch_lightning
 from pytorch_lightning import LightningModule
 import matplotlib.pyplot as plt
 
+from u_net_train import LitUNet  
+
 VAL_IMG_DIR = "data/processed/bracket_black/dataset/val/images"
 VAL_MASK_DIR = "data/processed/bracket_black/dataset/val/masks"
 CKPT_PATH = "lightning_logs/version_3/checkpoints/last.ckpt"  
@@ -37,7 +39,7 @@ class ValDataset(Dataset):
         return img, mask, self.images[idx].name
 
 
-from u_net_dice_loss import LitUNet  # adjust import if needed
+
 
 model = LitUNet.load_from_checkpoint(CKPT_PATH)
 model.eval()
@@ -49,7 +51,7 @@ model = model.to(device)
 val_ds = ValDataset(VAL_IMG_DIR, VAL_MASK_DIR)
 val_loader = DataLoader(val_ds, batch_size=1, shuffle=False)
 
-# --- Inference ---
+# Inference 
 dice_scores = []
 accuracies = []
 for imgs, masks, names in val_loader:
@@ -73,7 +75,8 @@ for imgs, masks, names in val_loader:
     acc = correct / total
     accuracies.append(acc)
     print(f"{names[0]}: Dice={dice:.4f}, Accuracy={acc:.4f}")
-    # --- Visualization ---
+
+    #  Visualization 
     fig, axs = plt.subplots(1, 3, figsize=(12, 4))
     axs[0].imshow(imgs.squeeze().permute(1, 2, 0).cpu().numpy())
     axs[0].set_title('Input Image')
@@ -82,7 +85,7 @@ for imgs, masks, names in val_loader:
     axs[1].set_title('Ground Truth')
     axs[1].axis('off')
     axs[2].imshow(pred_np, cmap='gray')
-    axs[2].set_title('Prediction')
+    axs[2].set_title(f'Prediction\nDice_score={dice:.4f}')
     axs[2].axis('off')
     plt.tight_layout()
     plt.show()
