@@ -257,8 +257,6 @@ Model trained on --> Bracket black dataset to infer on Bracket brown validation 
 
      ```bash
      python att_unet_train.py
-
-     ```bash
      python att_unet_infer.py
 
 ### Attention U-net results
@@ -266,6 +264,8 @@ Model trained on --> Bracket black dataset to infer on Bracket brown validation 
 ![Defect predictions](outputs/att_unet/dice_loss_curve.png) 
 ![Defect predictions](outputs/att_unet/bce_loss_curve.png)
 
+![Defect predictions](outputs/test3/scratch3.png)
+![Defect predictions](outputs/test3/scratch3.png)
 ![Defect predictions](outputs/att_unet/scratch2.png)
 ![Defect predictions](outputs/att_unet/scratch3.png)
 ![Defect predictions](outputs/att_unet/scratch4.png)
@@ -276,14 +276,14 @@ Model trained on --> Bracket black dataset to infer on Bracket brown validation 
 |---------------|-----------------| --------------- |
 | Mean Dice Score    |    0.0763       |     0.0812      |
 
-
+- Attention U-net had higher Dice scores for certain defects as compared to U-net.
+- Overall mean dice score also improved.
 
 
 ## Summary
 - Dataset preparation ensures correct mapping of images and masks.
-
 - U-Net is trained with stratified splits of good and defect images.
-
-- Checkpoints are stored for reproducibility.
-
-- Inference can be performed using trained models.
+- Dataset evaluation is performed on validation sets since enough test data wasn't available.
+- Model was trained on bracket_black and bracket_brown.
+- Cross dataset evaluation was performed.
+- Attention U-net was also implemented.
