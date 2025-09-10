@@ -63,9 +63,9 @@ This project was tested with the following environment:
 - Images and masks are renamed with a consistent convention:
 
    ```bash
-   000_good.png      → 000_good_mask.png
-   007_hole.png      → 007_hole_mask.png
-   010_scratch.png   → 010_scratch_mask.png
+   000_good.png mapped to 000_good_mask.png
+   007_hole.png mapped to 007_hole_mask.png
+   010_scratch.png mapped to 010_scratch_mask.png
 
 - Good and defect images are merged and split into train/validation sets using stratified sampling:
 - 70% good + 70% defect → train
