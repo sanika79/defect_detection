@@ -16,7 +16,7 @@ from torchvision import transforms
 EPOCHS = 150
 POS_WEIGHT = 3.0
 LR = 1e-3
-W,H = 384,384  # Image dimensions
+W,H = 512,512  # Image dimensions
 
 
 class SegmentationDataset(Dataset):
