@@ -26,103 +26,92 @@ This project was tested with the following environment:
    cd defect_detection
 
 2. (Optional) Set Python version with pyenv:
-```bash
-pyenv local 3.12.10
+   ```bash
+   pyenv local 3.12.10
 
 3. Install dependencies with Poetry:
-
-```bash
-poetry install ```bash
+   ```bash
+   poetry install 
 
 4. To add any new package:
-
-```bash
-poetry add <package-name> ```bash
+   ```bash
+   poetry add <package-name>
 
 5. Update paths in config/dev.yaml for raw and processed data. (Paths are kept as generic as possible.)
 
 ## Dataset Preprocessing
-Out of the six provided mechanical components, this project focuses on bracket_black.
+- Out of the six provided mechanical components, this project focuses on bracket_black.
 
-Original dataset structure:
+- Original dataset structure:
 
-```bash
-Copy code
-bracket_black/
-│── train/
-│    └── good/
-│── test/
-│    ├── good/
-│    ├── hole/
-│    └── scratches/
-│── ground_truth/
-     ├── hole/
-     └── scratches/
-```bash
-
-Preprocessing Steps
-Defective test images (test/hole and test/scratches) have binary masks in ground_truth/hole and ground_truth/scratches.
-
-Good images have no defects, so they are paired with an empty black mask.
-
-Images and masks are renamed with a consistent convention:
-
-```bash
-000_good.png      → 000_good_mask.png
-007_hole.png      → 007_hole_mask.png
-010_scratch.png   → 010_scratch_mask.png
-Good and defect images are merged and split into train/validation sets using stratified sampling:
-```bash
-
-70% good + 70% defect → train
-
-30% good + 30% defect → val
-
-Final processed dataset structure:
-
-```bash
-processed_dataset/
-│── train/
-│    ├── images/
-│    └── masks/
-│── val/
-     ├── images/
-     └── masks/
-```bash
+   ```bash
+   Copy code
+   bracket_black/
+   │── train/
+   │    └── good/
+   │── test/
+   │    ├── good/
+   │    ├── hole/
+   │    └── scratches/
+   │── ground_truth/
+        ├── hole/
+        └── scratches/
 
 
-Dataset Scripts
-prepare_dataset.py → Creates processed train/val splits.
-img_mask_matching.py → Verifies correct image-to-mask mappings.
+## Preprocessing Steps
+- Defective test images (test/hole and test/scratches) have binary masks in ground_truth/hole and ground_truth/scratches.
+- Good images have no defects, so they are paired with an empty black mask.
+- Images and masks are renamed with a consistent convention:
 
- Training
-Once preprocessing is complete, train the U-Net model:
+   ```bash
+   000_good.png      → 000_good_mask.png
+   007_hole.png      → 007_hole_mask.png
+   010_scratch.png   → 010_scratch_mask.png
+   Good and defect images are merged and split into train/validation sets using stratified sampling:
+   
 
-bash
-Copy code
-python u_net_train.py
-Checkpoints are saved under the lightning_logs/ directory.
+- 70% good + 70% defect → train
+- 30% good + 30% defect → val
 
-Use the saved checkpoints for inference.
+## Final processed dataset structure:
+
+   ```bash
+   processed_dataset/
+   │── train/
+   │    ├── images/
+   │    └── masks/
+   │── val/
+        ├── images/
+        └── masks/
+   
+
+## Dataset Scripts
+- prepare_dataset.py → Creates processed train/val splits.
+- img_mask_matching.py → Verifies correct image-to-mask mappings.
+
+ ## Training
+- Once preprocessing is complete, train the U-Net model:
+
+   ```bash
+      python u_net_train.py
+
+- Checkpoints are saved under the lightning_logs/ directory.
+
+- Use the saved checkpoints for inference.
 
 Inference
 Run inference with:
 
-bash
-Copy code
-python u_net_infer.py --checkpoint <path_to_checkpoint>
-This will generate predictions (defect masks) for the given input images.
+   ```bash
+   python u_net_infer.py --checkpoint <path_to_checkpoint>
 
-Summary
-Dataset preparation ensures correct mapping of images and masks.
+- This will generate predictions (defect masks) for the given input images.
 
-U-Net is trained with stratified splits of good and defect images.
+## Summary
+- Dataset preparation ensures correct mapping of images and masks.
 
-Checkpoints are stored for reproducibility.
+- U-Net is trained with stratified splits of good and defect images.
 
-Inference can be performed using trained models.
+- Checkpoints are stored for reproducibility.
 
-yaml
-Copy code
-
----
+- Inference can be performed using trained models.
