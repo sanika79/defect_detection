@@ -27,7 +27,7 @@ This project was tested with the following environment:
 
 2. (Optional) Set Python version with pyenv:
 ```bash
-pyenv local 3.12.10```bash
+pyenv local 3.12.10
 
 3. Install dependencies with Poetry:
 
