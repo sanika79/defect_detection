@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 
 from u_net_train import LitUNet  
 
-VAL_IMG_DIR = "data/processed/bracket_black/dataset/val/images"
-VAL_MASK_DIR = "data/processed/bracket_black/dataset/val/masks"
+VAL_IMG_DIR = "data/processed/bracket_brown/dataset/val/images"
+VAL_MASK_DIR = "data/processed/bracket_brown/dataset/val/masks"
 CKPT_PATH = "lightning_logs/test_6/checkpoints/last.ckpt"  
 RESULTS_DIR = "results/val_predictions"
 W, H = 384, 384
