@@ -178,6 +178,8 @@ Run inference with:
 
 - We use the validation set for testing and inference since we do not have a large number of samples in the overall dataset with defects to test our 'defect detection' model.
 
+- Since pixel accuracy can be misleading if the dataset is imbalanced (e.g., 95% background, 5% defects) and the model predicting all background will get ~95% accuracy. We stick to Dice score.
+
 ### Mean dice score on validation set
 
 | Metric        | Value (Test 2)  |  Value (Test 3) |
@@ -233,6 +235,24 @@ Run inference with:
 - False negative
 ![Defect predictions](outputs/bracket_brown/fn1.png)
   
+### Cross dataset evaluation
+
+Now that we have processed 2 datasets, we run 
+Model trained on --> Bracket brown dataset to infer on bracket black validation set which is unseen for the model.
+
+![Defect predictions](outputs/cross_dataset_evaluation/1.png)
+![Defect predictions](outputs/cross_dataset_evaluation/3.png)
+![Defect predictions](outputs/cross_dataset_evaluation/4.png)
+
+- We observe that model is trying to predict multiple defects in the same image since it has been trained to identify multiple pixel-patches or groups belonging to the same image array.
+
+Model trained on --> Bracket black dataset to infer on Bracket brown validation set which is unseen for the model.
+
+![Defect predictions](outputs/cross_dataset_evaluation/5.png)
+![Defect predictions](outputs/cross_dataset_evaluation/6.png)
+
+- The model is probably trying to detect features that resemble holes or scratches in the unseen dataset.
+
 
 
 ## Summary
