@@ -118,33 +118,28 @@ This project was tested with the following environment:
 ### Soft Dice Coefficient  
 The *soft* version works directly with predicted probabilities instead of hard thresholded masks:  
 
-\[
-\text{Soft Dice} = \frac{2 \sum_i p_i g_i}{\sum_i p_i + \sum_i g_i + \epsilon}
-\]
+Soft Dice = (2 * sum(p_i * g_i)) / (sum(p_i) + sum(g_i) + epsilon)
 
-Where:  
-- \(p_i\) = predicted probability for pixel \(i\)  
-- \(g_i\) = ground truth label (0 or 1)  
-- \(\epsilon\) = small constant for numerical stability  
+Where:
+
+p_i = predicted probability for pixel i
+g_i = ground truth label for pixel i (0 or 1)
+epsilon = small constant to avoid division by zero 
 
 ### Soft Dice Loss  
 The **Soft Dice Loss** is derived from the coefficient and used as the optimization objective:  
 
-\[
-\text{Soft Dice Loss} = 1 - \text{Soft Dice}
-\]
+Soft Dice Loss} = 1 - Soft Dice
 
 This encourages the model to maximize overlap between predicted and ground truth masks.  
 
 ### Why Soft Dice?  
 - Works well for **imbalanced datasets** (e.g., small defect areas vs. large background).  
-- Provides smoother gradients for training compared to hard Dice or accuracy.  
-- Often combined with **Binary Cross-Entropy (BCE)** for improved stability.  
+- Provides smoother gradients for training compared to hard Dice or accuracy.
+- Hard dice gives unstable training and messy loss curves while training.
+- Often combined with **Binary Cross-Entropy (BCE)** for improved stability (BCE has smooth gradients).
 
 ### Total loss - Soft Dice loss + BCE loss 
-  
-
-- Use the saved checkpoints for inference.
 
 ### Training Curves  
 
@@ -159,8 +154,8 @@ Example:
 - Specify checkpoint path in config/dev.yaml and call it in inference script.
 Run inference with:
 
-      ```bash
-      python u_net_infer.py 
+   ```bash
+   python u_net_infer.py 
 
 - This will generate predictions (defect masks) for the given input images, calculate dice score and accuracy.
 - We use the validation set for testing and inference since we do not have a large number of samples in the overall dataset with defects to test our 'defect detection' model.
