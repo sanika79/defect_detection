@@ -18,7 +18,7 @@
 ## Test 2
 - Loss function → BCE loss with positive weight + Dice loss
 - Value of positive weight - 3
-- Predictive threshold - 0.
+- Predictive threshold - 0.5
 - U-net input resolution - 384 x 384
 - Max Epochs - 100
 - Early stopping patience - 80
