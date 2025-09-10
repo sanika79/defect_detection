@@ -25,10 +25,7 @@ This project was tested with the following environment:
    ```bash
    git clone https://github.com/sanika79/defect_detection.git
 
-   ```bash
-   cd defect_detection
-
-2. (Optional) Set Python version with pyenv:
+2. (Optional) Go inside project directory and set Python version with pyenv:
    ```bash
    pyenv local 3.12.10
 
