@@ -107,22 +107,26 @@ This project was tested with the following environment:
 - Use the saved checkpoints for inference.
 
 ## Inference
+Specify checkpoint path in config/dev.yaml and call it in inference script.
 Run inference with:
 
-            ```bash
-      python u_net_infer.py --checkpoint <path_to_checkpoint>
+      ```bash
+      python u_net_infer.py 
 
-- This will generate predictions (defect masks) for the given input images.
+- This will generate predictions (defect masks) for the given input images, calculate dice score and accuracy.
 
 ## Results  
 
 Below are placeholders for results (to be updated with actual outputs):  
 
 ### Training Curves  
+
+Model outputs present in outputs/ directory
+
 _Add plots for training/validation loss, IoU, Dice score here._  
 
 Example:  
-![Training Curve](results/training_curve.png)  
+![Training Curve](outputs/test3/dice_loss_curve.png)  
 
 ---
 
