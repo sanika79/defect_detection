@@ -113,6 +113,15 @@ This project was tested with the following environment:
 
 - Use the saved checkpoints for inference.
 
+### Training Curves  
+
+- Several tests were conducted to tune the U-net model with the best hyperparameters.
+- Model outputs present in outputs/ directory
+ 
+Example:  
+![Training Curve](outputs/test3/dice_loss_curve.png)  
+![Training Curve](outputs/test3/bce_loss_curve.png)
+
 ## Inference
 Specify checkpoint path in config/dev.yaml and call it in inference script.
 Run inference with:
@@ -121,40 +130,25 @@ Run inference with:
       python u_net_infer.py 
 
 - This will generate predictions (defect masks) for the given input images, calculate dice score and accuracy.
+- We use the validation set for testing and inference since we do not have a large number of samples in the overall dataset with defects to test our 'defect detection' model.
 
-## Results  
-
-Below are placeholders for results (to be updated with actual outputs):  
-
-### Training Curves  
-
-- Several tests were conducted to tune the U-net model with the best hyperparameters.
-- Model outputs present in outputs/ directory
- 
-
-Example:  
-![Training Curve](outputs/test3/dice_loss_curve.png)  
-![Training Curve](outputs/test3/bce_loss_curve.png)
-
----
-
-### Quantitative Metrics for a sample image
+### Mean dice and mean accuracy on validation set
 
 | Metric        | Value (Test 2)  |  Value (Test 3) |
 |---------------|-----------------| --------------- |
-| Dice Score    |                 |                 |
+| Dice Score    |    0.0643       |     0.0763      |
 | Accuracy      |                 |                 |
 
 ---
 
-### Sample Predictions  
+### Dice score comparisons for individual defects (test 2 vs test 3)
 
+ ![Defect predictions](outputs/test2/scratch1.png) 
  ![Defect predictions](outputs/test3/scratch1.png) 
-  ![Defect predictions](outputs/test3/hole1.png) 
 
-## Conclusions
-- The 'Scratch' defect performed really well in Test 3.
-- 
+## Observations
+- The dice scores for 'Scratch' defect performed improved from Test 2 to Test 3.
+- Test 2 (trained on fewer epochs) had more false positives than Test
 
 
 
