@@ -83,15 +83,17 @@ This project was tested with the following environment:
            └── masks/
 
 ## Dataset Scripts
+```bash
+prepare_dataset.py
 
-- prepare_dataset.py → Creates processed train/val splits.
+Creates processed train/val splits.
 - img_mask_matching.py → Verifies correct image-to-mask mappings.
 
  ## Training
 - Once preprocessing is complete, train the U-Net model:
 
    ```bash
-      python u_net_train.py
+python u_net_train.py
 
 - Checkpoints are saved under the lightning_logs/ directory.
 
@@ -101,7 +103,7 @@ This project was tested with the following environment:
 Run inference with:
 
       ```bash
-      python u_net_infer.py --checkpoint <path_to_checkpoint>
+python u_net_infer.py --checkpoint <path_to_checkpoint>
 
 - This will generate predictions (defect masks) for the given input images.
 
