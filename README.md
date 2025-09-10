@@ -15,7 +15,8 @@ It covers:
 
 This project was tested with the following environment:  
 
-- **Python**: 3.12.10  
+- **Python**: 3.12.10
+- **Poetry**: 1.8.3
 - **Torch**: 2.2.2  
 - **CUDA**: 11.8  
 - **Torchvision**: 0.17.2  
@@ -29,15 +30,20 @@ This project was tested with the following environment:
    ```bash
    pyenv local 3.12.10
 
-3. Install dependencies with Poetry:
+3. Install poetry inside your current Python environment
+   ```bash
+   pip install --upgrade pip
+   pip install poetry==1.8.3
+
+4. Install dependencies with Poetry:
    ```bash
    poetry install 
 
-4. To add any new package:
+5. To add any new package:
    ```bash
    poetry add <package-name>
 
-5. Update paths in config/dev.yaml for raw and processed data. (Paths are kept as generic as possible.)
+6. Update paths in config/dev.yaml for raw and processed data. (Paths are kept as generic as possible.)
 
 ## Dataset Preprocessing
 - Out of the six provided mechanical components, this project focuses on **bracket_black**.
