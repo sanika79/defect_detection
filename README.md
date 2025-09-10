@@ -83,11 +83,15 @@ This project was tested with the following environment:
            └── masks/
 
 ## Dataset Scripts
-      ```bash
-      prepare_dataset.py
+   ```bash
+   prepare_dataset.py
 
-Creates processed train/val splits.
-- img_mask_matching.py → Verifies correct image-to-mask mappings.
+- Creates processed train/val splits.
+
+   ```bash
+   img_mask_matching.py
+
+- Verifies correct image-to-mask mappings.
 
  ## Training
 - Once preprocessing is complete, train the U-Net model:
