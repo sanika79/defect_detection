@@ -203,13 +203,17 @@ Run inference with:
 
 # Training on different dataset - bracket_brown
 
+- This time the **U-net input resolution was increased to - 512x512** since this dataset had more complicated patterns with multiple defects in same image.
+
 ![Defect predictions](outputs/bracket_brown/dice_loss_curve.png) 
 ![Defect predictions](outputs/bracket_brown/bce_loss_curve.png)
 
 - The training curves look very noisy especially for dice loss.
 - It is also failing to converege. This suggests that model is not generalizing well to the validation set.
 
-## Bracket brown inference results
+## Bracket brown inference results on validation set
+- These patterns were difficult to detect as compared to holes and scratches present in the Bracket Black dataset.
+- These had multiple defects in the same image.
 
 - True positives
 ![Defect predictions](outputs/bracket_brown/tp1.png) 
