@@ -146,8 +146,15 @@ This encourages the model to maximize overlap between predicted and ground truth
 
 - Several tests were conducted to tune the U-net model with the best hyperparameters.
 - Model outputs present in outputs/ directory
- 
-Example:  
+
+### Test 1 insights
+- The model did not converge well in Test 1. Hence, it was important to increase the number of epochs and patience for early stopping.
+
+![Training Curve](outputs/test1/dice_loss_curve.png)  
+![Training Curve](outputs/test1/bce_loss_curve.png)
+
+  
+### Improvement in Test 2 and Test 3
 ![Training Curve](outputs/test3/dice_loss_curve.png)  
 ![Training Curve](outputs/test3/bce_loss_curve.png)
 
@@ -186,8 +193,9 @@ Run inference with:
 ![Defect predictions](outputs/test2/good_false_positive.png)
 
 ## Observations
+
 - The dice scores for 'Scratch' defect performed improved from Test 2 to Test 3.
-- Test 2 (trained on fewer epochs) had more false positives than Test
+- Test 2 (trained on fewer epochs) had more false positives than Test 3.
 
 
 
