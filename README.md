@@ -23,7 +23,7 @@ This project was tested with the following environment:
 1. Clone the repository:  
    ```bash
    git clone https://github.com/sanika79/defect_detection.git
-   cd defect_detection```bash
+   cd defect_detection
 
 2. (Optional) Set Python version with pyenv:
 ```bash
