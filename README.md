@@ -164,14 +164,18 @@ Run inference with:
 
 | Metric        | Value (Test 2)  |  Value (Test 3) |
 |---------------|-----------------| --------------- |
-| Dice Score    |    0.0643       |     0.0763      |
+| Mean Dice Score    |    0.0643       |     0.0763      |
 
 ---
 
 ### Dice score comparisons for individual defects (test 2 vs test 3)
 
- ![Defect predictions](outputs/test2/scratch2.png) 
- ![Defect predictions](outputs/test3/scratch2.png) 
+ ![Defect predictions](outputs/test2/scratch3.png) 
+ ![Defect predictions](outputs/test3/scratch3.png) 
+
+ ![Defect predictions](outputs/test2/scratch1.png) 
+ ![Defect predictions](outputs/test3/scratch1.png) 
+
 
 ## Observations
 - The dice scores for 'Scratch' defect performed improved from Test 2 to Test 3.
