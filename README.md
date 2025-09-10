@@ -273,7 +273,7 @@ Model trained on --> Bracket black dataset to infer on Bracket brown validation 
 ![Defect predictions](outputs/test3/scratch3.png)
 - Attention U-net
 ![Defect predictions](outputs/att_unet/scratch3.png)
--U-net
+- U-net
 ![Defect predictions](outputs/test3/scratch2.png)
 - Attention U-net
 ![Defect predictions](outputs/att_unet/scratch2.png)
