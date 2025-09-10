@@ -1,7 +1,9 @@
 # Computer Vision Project: Defect Detection  
 
 - This project implements a semantic segmentation task where the goal is to identify and segment regions of defects (such as holes or scratches) in images of objects.
-- A U-Net model is used to predict a mask highlighting defect areas, distinguishing them from non-defective (good) regions.  
+- A U-Net model is used to predict a mask highlighting defect areas, distinguishing them from non-defective (good) regions.
+- Performance is also tested by training on 1 dataset and testing on a new dataset. (Cross dataset evaluation)
+- An Attention U-net model has also been implemented at the end.
 
 It covers:  
 - Environment setup with Torch + CUDA support  
