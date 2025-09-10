@@ -37,153 +37,165 @@ class SegmentationDataset(Dataset):
         ])
         img_path = self.images[idx]
         mask_path = self.masks[idx]
-
         img = Image.open(img_path).convert("RGB")
-        mask = Image.open(mask_path).convert("L")  # grayscale
-
-        img = self.transform(img)  # shape: [3, W, W]
-        mask = self.transform(mask)  # shape: [1, W, W], float in [0,1]
-
-        # Binarize mask (if needed)
+        mask = Image.open(mask_path).convert("L")
+        img = self.transform(img)
+        mask = self.transform(mask)
         mask = (mask > 0).float()
-
         return img, mask
 
+#  Attention Block 
+## This block computes an attention map to focus the model on relevant spatial regions during upsampling.
+class AttentionBlock(nn.Module):
+    def __init__(self, F_g, F_l, F_int):
+        super().__init__()
+        self.W_g = nn.Sequential(
+            nn.Conv2d(F_g, F_int, kernel_size=1, stride=1, padding=0, bias=True),
+            nn.BatchNorm2d(F_int)
+        )
+        self.W_x = nn.Sequential(
+            nn.Conv2d(F_l, F_int, kernel_size=1, stride=1, padding=0, bias=True),
+            nn.BatchNorm2d(F_int)
+        )
+        self.psi = nn.Sequential(
+            nn.Conv2d(F_int, 1, kernel_size=1, stride=1, padding=0, bias=True),
+            nn.BatchNorm2d(1),
+            nn.Sigmoid()
+        )
+        self.relu = nn.ReLU(inplace=True)
 
+    def forward(self, g, x):
+        # g: gating signal (from decoder after upsample)   shape [B, F_g, H, W]
+        # x: skip connection (from encoder)                shape [B, F_l, H, W]
+        g1 = self.W_g(g)
+        x1 = self.W_x(x)
+        psi = self.relu(g1 + x1)
+        psi = self.psi(psi)            # shape [B,1,H,W]
+        return x * psi                 # apply attention map to skip
 
 class DoubleConv(nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_ch, out_ch):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, 3, padding=1),
-            nn.BatchNorm2d(out_channels),
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_ch, out_ch, 3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
             nn.ReLU(inplace=True),
-            nn.Conv2d(out_channels, out_channels, 3, padding=1),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),
+            nn.Conv2d(out_ch, out_ch, 3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True)
         )
-
     def forward(self, x):
-        return self.net(x)
+        return self.conv(x)
 
-
-class UNet(nn.Module):
-    def __init__(self, in_channels=3, out_channels=1, features=[64, 128, 256, 512]):
+class AttUNet(nn.Module):
+    def __init__(self, in_ch=3, out_ch=1, features=[64,128,256,512]):
         super().__init__()
-        self.downs = nn.ModuleList()
-        self.ups = nn.ModuleList()
-
-        # Down
-        for feature in features:
-            self.downs.append(DoubleConv(in_channels, feature))
-            in_channels = feature
-
-        # Up
-        for feature in reversed(features):
-            self.ups.append(nn.ConvTranspose2d(feature * 2, feature, kernel_size=2, stride=2))
-            self.ups.append(DoubleConv(feature * 2, feature))
-
-        self.bottleneck = DoubleConv(features[-1], features[-1] * 2)
-        self.final_conv = nn.Conv2d(features[0], out_channels, kernel_size=1)
         self.pool = nn.MaxPool2d(2, 2)
 
-    def forward(self, x):
-        #print(f"UNet Initial input shape: {x.shape}")
-        skip_connections = []
-
         # Encoder
+        self.downs = nn.ModuleList()
+        ch = in_ch
+        for f in features:
+            self.downs.append(DoubleConv(ch, f))
+            ch = f
+
+        # Bottleneck
+        self.bottleneck = DoubleConv(features[-1], features[-1]*2)
+
+        # Decoder - started from bottleneck channels (features[-1]*2)
+        self.up_transposes = nn.ModuleList()
+        self.att_blocks = nn.ModuleList()
+        self.up_convs = nn.ModuleList()
+
+        in_ch_up = features[-1]*2  # 1024 for features=[64,128,256,512]
+        for feat in reversed(features):
+            # upsample from current in_ch_up to feat channels
+            self.up_transposes.append(nn.ConvTranspose2d(in_ch_up, feat, kernel_size=2, stride=2))
+            # attention block: gating F_g = feat, skip F_l = feat
+            self.att_blocks.append(AttentionBlock(F_g=feat, F_l=feat, F_int=feat//2))
+            # after concat (feat from up + feat from skip) to feat*2 channels into DoubleConv
+            self.up_convs.append(DoubleConv(feat*2, feat))
+            # next iteration in_ch_up is feat (after conv)
+            in_ch_up = feat
+
+        # final conv
+        self.final_conv = nn.Conv2d(features[0], out_ch, kernel_size=1)
+
+    def forward(self, x):
+        # Encoder
+        skips = []
         for down in self.downs:
             x = down(x)
-            #print(f"UNet Down block output shape: {x.shape}")
-            skip_connections.append(x)
+            skips.append(x)
             x = self.pool(x)
 
         # Bottleneck
         x = self.bottleneck(x)
-        #print(f"UNet Bottleneck shape: {x.shape}")
-        skip_connections = skip_connections[::-1]
+
+        # reverse skips for decoder
+        skips = skips[::-1]
 
         # Decoder
-        for idx in range(0, len(self.ups), 2):
-            x = self.ups[idx](x)
-            skip_connection = skip_connections[idx // 2]
+        for i in range(len(self.up_transposes)):
+            x = self.up_transposes[i](x)          # upsample
+            skip = skips[i]                       # corresponding skip map
 
-            ## Aligns shapes by padding if necessary
-            if x.shape != skip_connection.shape:
-                diffY = skip_connection.size()[2] - x.size()[2]
-                diffX = skip_connection.size()[3] - x.size()[3]
-                x = nn.functional.pad(x, [diffX // 2, diffX - diffX // 2,
-                              diffY // 2, diffY - diffY // 2])
+            # pad x if needed to match skip spatial dims
+            if x.shape[2] != skip.shape[2] or x.shape[3] != skip.shape[3]:
+                diffY = skip.size(2) - x.size(2)
+                diffX = skip.size(3) - x.size(3)
+                x = nn.functional.pad(x, [diffX//2, diffX - diffX//2, diffY//2, diffY - diffY//2])
 
-            # if x.shape != skip_connection.shape:
-            #     x = T.Resize(skip_connection.shape[2:])(x)
+            # attention gating: gating uses x (upsampled decoder) and skip
+            attn = self.att_blocks[i](g=x, x=skip)  # returns skip * attention_map
+            # concat attended skip + upsampled decoder feature
+            x = torch.cat([attn, x], dim=1)
+            # conv to reduce channels
+            x = self.up_convs[i](x)
 
-            x = torch.cat((skip_connection, x), dim=1)
-            x = self.ups[idx + 1](x)
-            #print(f"UNet Up block {idx // 2} output shape: {x.shape}")
+        x = self.final_conv(x)
+        return x
 
-        #print("self.final_conv(x).shape:", self.final_conv(x).shape)
-
-        return self.final_conv(x)
-
-
-
+# Losses 
 class DiceLoss(nn.Module):
     def __init__(self, eps=1e-7):
         super().__init__()
         self.eps = eps
-
     def forward(self, preds, targets):
-        preds = torch.sigmoid(preds)   # convert logits → [0,1]
+        preds = torch.sigmoid(preds)
         preds = preds.view(-1)
         targets = targets.view(-1)
-
         intersection = (preds * targets).sum()
         dice_score = (2. * intersection + self.eps) / (preds.sum() + targets.sum() + self.eps)
         return 1 - dice_score
 
-
 class BCEDiceLoss(nn.Module):
     def __init__(self, pos_weight=POS_WEIGHT):
         super().__init__()
-        # weight positives more since defects are rare
         self.bce = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([pos_weight]))
         self.dice = DiceLoss()
-
     def forward(self, preds, targets):
         return self.bce(preds, targets) + self.dice(preds, targets)
 
-
 def dice_coeff(preds, targets, eps=1e-7):
-    preds = preds.view(-1)   ## flattens the tensor into a 1D vector
-    targets = targets.view(-1) ## same for targets
-    intersection = (preds * targets).sum() ## element-wise multiplication and sum
-    return (2. * intersection + eps) / (preds.sum() + targets.sum() + eps)
-
-
-def iou_score(preds, targets, eps=1e-7):
     preds = preds.view(-1)
     targets = targets.view(-1)
     intersection = (preds * targets).sum()
-    union = preds.sum() + targets.sum() - intersection
-    return (intersection + eps) / (union + eps)
+    return (2. * intersection + eps) / (preds.sum() + targets.sum() + eps)
 
-
-class LitUNet(pl.LightningModule):
+# Lightning Module 
+class LitAttUNet(pl.LightningModule):
     def __init__(self, lr=LR, pos_weight=POS_WEIGHT):
         super().__init__()
-        self.model = UNet()
+        self.model = AttUNet()
         self.loss_fn = BCEDiceLoss(pos_weight=pos_weight)
         self.lr = lr
         self.train_dice_losses = []
         self.train_bce_losses = []
         self.val_dice_losses = []
         self.val_bce_losses = []
-
     def forward(self, x):
-        ## print("model output tensor shape:", self.model(x).shape)  ## Debugging line
-        return self.model(x)  ## torch.Size([B, 1, W, W])
-
+        return self.model(x)
     def training_step(self, batch, batch_idx):
         imgs, masks = batch
         logits = self(imgs)
@@ -194,85 +206,33 @@ class LitUNet(pl.LightningModule):
         self.train_dice_losses.append(dice_loss.item())
         self.log("train_loss", loss, prog_bar=True)
         return loss
-
     def validation_step(self, batch, batch_idx):
         imgs, masks = batch
         logits = self(imgs)
         bce_loss = self.loss_fn.bce(logits, masks)
         dice_loss = self.loss_fn.dice(logits, masks)
         loss = bce_loss + dice_loss
-
-        preds = torch.sigmoid(logits)   # torch.Size([B, 1, W, W])
+        preds = torch.sigmoid(logits)
         preds_bin = (preds > 0.5).float()
-
         dice = dice_coeff(preds_bin, masks)
-        iou = iou_score(preds_bin, masks)
-
         self.val_bce_losses.append(bce_loss.item())
         self.val_dice_losses.append(dice_loss.item())
         self.log("val_loss", loss, prog_bar=True)
         self.log("val_dice_score", dice, prog_bar=True)
-        self.log("val_iou_score", iou, prog_bar=True)
         return {"imgs": imgs, "masks": masks, "preds": preds_bin}
-
     def configure_optimizers(self):
         return optim.Adam(self.parameters(), lr=self.lr)
 
-
-
-class VisualizePredictionsCallback(Callback):
-    def __init__(self, num_samples=4):
-        super().__init__()
-        self.num_samples = num_samples
-
-    def on_validation_epoch_end(self, trainer, pl_module):
-        outputs = trainer.callback_metrics
-        data_root = Path("data/processed/bracket_brown/dataset")
-        val_ds = SegmentationDataset(data_root/"val/images", data_root/"val/masks")
-        val_loader = DataLoader(val_ds, batch_size=4, shuffle=False, num_workers=2)
-
-
-        batch = next(iter(val_loader))
-        imgs, masks = batch
-        imgs, masks = imgs.to(pl_module.device), masks.to(pl_module.device)
-        preds = torch.sigmoid(pl_module(imgs))
-        preds_bin = (preds > 0.3).float()
-
-        imgs = imgs.cpu().numpy().transpose(0, 2, 3, 1)
-        masks = masks.cpu().numpy().squeeze(1)
-        preds_bin = preds_bin.cpu().numpy().squeeze(1)
-
-        import os
-        epoch = trainer.current_epoch if hasattr(trainer, 'current_epoch') else 0
-        save_dir = os.path.join("results/plots_dice_loss", f"epoch_{epoch}")
-        os.makedirs(save_dir, exist_ok=True)
-        for i in range(min(self.num_samples, len(imgs))):
-            fig, axs = plt.subplots(1, 3, figsize=(10, 4))
-            axs[0].set_title("Image")
-            axs[0].imshow(imgs[i])
-            axs[1].set_title("Ground Truth")
-            axs[1].imshow(masks[i], cmap="gray")
-            axs[2].set_title("Prediction")
-            axs[2].imshow(preds_bin[i], cmap="gray")
-            for ax in axs: ax.axis("off")
-            plot_path = os.path.join(save_dir, f"plot_{i}.png")
-            plt.savefig(plot_path)
-            plt.close(fig)
-
-
-
+#  Training 
 def main():
-    data_root = Path("data/processed/bracket_brown/dataset")
-
+    data_root = Path("data/processed/bracket_black/dataset")
     train_ds = SegmentationDataset(data_root/"train/images", data_root/"train/masks")
     val_ds = SegmentationDataset(data_root/"val/images", data_root/"val/masks")
 
     train_loader = DataLoader(train_ds, batch_size=2, shuffle=True, num_workers=2)
     val_loader = DataLoader(val_ds, batch_size=2, shuffle=False, num_workers=2)
 
-    model = LitUNet(lr=LR, pos_weight=POS_WEIGHT) 
-
-
+    model = LitAttUNet(lr=LR, pos_weight=POS_WEIGHT)
     checkpoint = ModelCheckpoint(
         monitor="val_dice_score",
         save_top_k=1,
@@ -284,27 +244,20 @@ def main():
         max_epochs= EPOCHS,
         accelerator="gpu" if torch.cuda.is_available() else "cpu",
         devices=1,
-        callbacks=[checkpoint, early_stop, VisualizePredictionsCallback(num_samples=4)]
+        callbacks=[checkpoint, early_stop]
     )
-
     trainer.fit(model, train_loader, val_loader)
-
-    #Plot BCE and Dice loss curves after training
-    import matplotlib.pyplot as plt
+    # Plot BCE and Dice loss curves after training
     epochs = range(1, len(model.train_bce_losses) // len(train_loader) + 1)
-    # Reshape to per-epoch means
     def per_epoch_means(losses, loader):
         n = len(loader)
         return [np.mean(losses[i*n:(i+1)*n]) for i in range(len(losses)//n)]
-
     train_bce = per_epoch_means(model.train_bce_losses, train_loader)
     train_dice = per_epoch_means(model.train_dice_losses, train_loader)
     val_bce = per_epoch_means(model.val_bce_losses, val_loader)
     val_dice = per_epoch_means(model.val_dice_losses, val_loader)
-
     save_dir = "results/plots_dice_loss"
     os.makedirs(save_dir, exist_ok=True)
-
     plt.figure()
     plt.plot(epochs, train_bce, label='Train BCE Loss')
     plt.plot(epochs, val_bce, label='Val BCE Loss')
@@ -314,7 +267,6 @@ def main():
     plt.title('BCE Loss per Epoch')
     plt.savefig(os.path.join(save_dir, 'bce_loss_curve.png'))
     plt.close()
-
     plt.figure()
     plt.plot(epochs, train_dice, label='Train Dice Loss')
     plt.plot(epochs, val_dice, label='Val Dice Loss')
@@ -324,7 +276,6 @@ def main():
     plt.title('Dice Loss per Epoch')
     plt.savefig(os.path.join(save_dir, 'dice_loss_curve.png'))
     plt.close()
-
 
 if __name__ == "__main__":
     main()
