@@ -5,12 +5,6 @@
 - Performance is also tested by training on 1 dataset and testing on a new dataset. (Cross dataset evaluation)
 - An Attention U-net model has also been implemented at the end.
 
-It covers:  
-- Environment setup with Torch + CUDA support  
-- Dataset preprocessing  
-- Model training  
-- Inference  
-
 ---
 
 ## Environment Setup  
