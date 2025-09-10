@@ -87,12 +87,12 @@ This project was tested with the following environment:
  - To create processed train/val splits as above.
    
       ```bash
-      prepare_dataset.py
+      python prepare_dataset.py
    
 -  To verify the correct image-to-mask matching
   
-        ```bash
-         img_mask_matching.py
+     ```bash
+      python img_mask_matching.py
 
 
 
