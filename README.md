@@ -84,7 +84,7 @@ This project was tested with the following environment:
 
 ## Dataset Scripts
       ```bash
-      prepare_dataset.py
+         prepare_dataset.py
 
 - Creates processed train/val splits.
 
