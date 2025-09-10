@@ -13,7 +13,7 @@ from u_net_train import LitUNet
 
 VAL_IMG_DIR = "data/processed/bracket_black/dataset/val/images"
 VAL_MASK_DIR = "data/processed/bracket_black/dataset/val/masks"
-CKPT_PATH = "lightning_logs/test_6/checkpoints/last.ckpt"  
+CKPT_PATH = "lightning_logs/version_6/checkpoints/last.ckpt"  
 RESULTS_DIR = "results/val_predictions"
 W, H = 384, 384
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -37,8 +37,6 @@ class ValDataset(Dataset):
         img = self.transform(img)
         mask = self.transform(mask)
         return img, mask, self.images[idx].name
-
-
 
 
 model = LitUNet.load_from_checkpoint(CKPT_PATH)
@@ -65,14 +63,14 @@ for imgs, masks, names in val_loader:
     pred_img = Image.fromarray(pred_np.astype(np.uint8))
     pred_img.save(os.path.join(RESULTS_DIR, f"pred_{names[0]}"))
     # Compute Dice
-    mask_bin = (masks > 0.5).float()
+    mask_bin = (masks > 0.5).float()   ## 
     intersection = (preds_bin * mask_bin).sum().item()
     dice = (2. * intersection) / (preds_bin.sum().item() + mask_bin.sum().item() + 1e-7)
     dice_scores.append(dice)
     # Compute Accuracy
-    correct = (preds_bin == mask_bin).sum().item()
-    total = mask_bin.numel()
-    acc = correct / total
+    correct = (preds_bin == mask_bin).sum().item()  ## correct pixels
+    total = mask_bin.numel()   ## total number of pixels in ground truth mask tensor
+    acc = correct / total   ## accuracy = correct pixels / total pixels 
     accuracies.append(acc)
     print(f"{names[0]}: Dice={dice:.4f}, Accuracy={acc:.4f}")
 

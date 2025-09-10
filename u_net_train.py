@@ -155,9 +155,9 @@ class BCEDiceLoss(nn.Module):
 
 
 def dice_coeff(preds, targets, eps=1e-7):
-    preds = preds.view(-1)
-    targets = targets.view(-1)
-    intersection = (preds * targets).sum()
+    preds = preds.view(-1)   ## flattens the tensor into a 1D vector
+    targets = targets.view(-1) ## same for targets
+    intersection = (preds * targets).sum() ## element-wise multiplication and sum
     return (2. * intersection + eps) / (preds.sum() + targets.sum() + eps)
 
 
