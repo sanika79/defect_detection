@@ -43,7 +43,7 @@ This project was tested with the following environment:
 
 ## Dataset Preprocessing
 - Download the dataset from https://drive.google.com/file/d/1b3dcRqTXR7LZkOEkVQ9qO_EcKzzC2EEI/view?usp=drive_link 
-- The dataset is present in the data/anomoly_dataset folder.
+- The dataset is present in the data/anomaly_dataset folder.
 - Out of the six provided mechanical components, this project focuses on **bracket_black**.
 
 - Original dataset structure:
