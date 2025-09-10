@@ -66,9 +66,8 @@ This project was tested with the following environment:
    000_good.png      → 000_good_mask.png
    007_hole.png      → 007_hole_mask.png
    010_scratch.png   → 010_scratch_mask.png
-   Good and defect images are merged and split into train/validation sets using stratified sampling:
-   
 
+- Good and defect images are merged and split into train/validation sets using stratified sampling:
 - 70% good + 70% defect → train
 - 30% good + 30% defect → val
 
