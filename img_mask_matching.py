@@ -1,4 +1,4 @@
-## Verify that every image has a corresponding mask
+##  Verify that every image has a corresponding mask
 
 from utils import PROCESSED_BRACKET_BLACK_DATA_DIR
 
