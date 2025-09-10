@@ -26,26 +26,28 @@ This project was tested with the following environment:
    cd defect_detection
    ```bash
 
+2. (Optional) Set Python version with pyenv:
 ```bash
 pyenv local 3.12.10```bash
-Install dependencies with Poetry:
 
-bash
-Copy code
-poetry install
-To add any new package:
+3. Install dependencies with Poetry:
 
-bash
-Copy code
-poetry add <package-name>
-Update paths in config/dev.yaml for raw and processed data. (Paths are kept as generic as possible.)
+```bash
+poetry install ```bash
+
+4. To add any new package:
+
+```bash
+poetry add <package-name> ```bash
+
+5. Update paths in config/dev.yaml for raw and processed data. (Paths are kept as generic as possible.)
 
 ## Dataset Preprocessing
 Out of the six provided mechanical components, this project focuses on bracket_black.
 
 Original dataset structure:
 
-bash
+```bash
 Copy code
 bracket_black/
 │── train/
@@ -57,6 +59,7 @@ bracket_black/
 │── ground_truth/
      ├── hole/
      └── scratches/
+```bash
 
 Preprocessing Steps
 Defective test images (test/hole and test/scratches) have binary masks in ground_truth/hole and ground_truth/scratches.
@@ -65,11 +68,12 @@ Good images have no defects, so they are paired with an empty black mask.
 
 Images and masks are renamed with a consistent convention:
 
-Copy code
+```bash
 000_good.png      → 000_good_mask.png
 007_hole.png      → 007_hole_mask.png
 010_scratch.png   → 010_scratch_mask.png
 Good and defect images are merged and split into train/validation sets using stratified sampling:
+```bash
 
 70% good + 70% defect → train
 
@@ -77,8 +81,7 @@ Good and defect images are merged and split into train/validation sets using str
 
 Final processed dataset structure:
 
-kotlin
-Copy code
+```bash
 processed_dataset/
 │── train/
 │    ├── images/
@@ -86,9 +89,11 @@ processed_dataset/
 │── val/
      ├── images/
      └── masks/
+```bash
+
+
 Dataset Scripts
 prepare_dataset.py → Creates processed train/val splits.
-
 img_mask_matching.py → Verifies correct image-to-mask mappings.
 
  Training
