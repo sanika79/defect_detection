@@ -149,7 +149,7 @@ This encourages the model to maximize overlap between predicted and ground truth
 - Several tests were conducted to tune the U-net model with the best hyperparameters.
 - Model outputs present in outputs/ directory
 
-### Test 1 insights
+### Test 1 insights for bracket_black
 - The model did not converge well in Test 1. Hence, it was important to increase the number of epochs and patience for early stopping.
 
 ![Training Curve](outputs/test1/dice_loss_curve.png)  
@@ -182,12 +182,16 @@ Run inference with:
 | Mean Dice Score    |    0.0643       |     0.0763      |
 
 
-### Dice score comparisons for individual defects (test 2 vs test 3)
+### Defect predictions  (test 2 vs test 3)
 
- ![Defect predictions](outputs/test2/scratch3.png) 
+- Test 2
+ ![Defect predictions](outputs/test2/scratch3.png)
+- Test 3
  ![Defect predictions](outputs/test3/scratch3.png) 
 
- ![Defect predictions](outputs/test2/scratch1.png) 
+ - Test 2
+ ![Defect predictions](outputs/test2/scratch1.png)
+- Test 3
  ![Defect predictions](outputs/test3/scratch1.png) 
 
  ### Few False positives from Test 2
@@ -200,7 +204,7 @@ Run inference with:
 - Test 2 (trained on fewer epochs) had more false positives than Test 3.
 
 
-### Training on different dataset - bracket_brown
+# Training on different dataset - bracket_brown
 
 ![Defect predictions](outputs/bracket_brown/dice_loss_curve.png) 
 ![Defect predictions](outputs/bracket_brown/bce_loss_curve.png)
