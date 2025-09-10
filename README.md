@@ -109,7 +109,40 @@ This project was tested with the following environment:
 ## Loss function used while training
 
 - Since the dataset is highly imbalanced, the Soft Dice coefficient and the Soft Dice loss have been used to evaluate the validation performance of the model.
-- The episolon value in the Dice loss has come with experimentation.
+
+## Soft Dice Coefficient & Loss  
+
+- The **Dice Coefficient** is a common evaluation metric for image segmentation.
+- It measures the overlap between predicted masks and ground truth masks.  
+
+### Soft Dice Coefficient  
+The *soft* version works directly with predicted probabilities instead of hard thresholded masks:  
+
+\[
+\text{Soft Dice} = \frac{2 \sum_i p_i g_i}{\sum_i p_i + \sum_i g_i + \epsilon}
+\]
+
+Where:  
+- \(p_i\) = predicted probability for pixel \(i\)  
+- \(g_i\) = ground truth label (0 or 1)  
+- \(\epsilon\) = small constant for numerical stability  
+
+### Soft Dice Loss  
+The **Soft Dice Loss** is derived from the coefficient and used as the optimization objective:  
+
+\[
+\text{Soft Dice Loss} = 1 - \text{Soft Dice}
+\]
+
+This encourages the model to maximize overlap between predicted and ground truth masks.  
+
+### Why Soft Dice?  
+- Works well for **imbalanced datasets** (e.g., small defect areas vs. large background).  
+- Provides smoother gradients for training compared to hard Dice or accuracy.  
+- Often combined with **Binary Cross-Entropy (BCE)** for improved stability.  
+
+### Total loss - Soft Dice loss + BCE loss 
+  
 
 - Use the saved checkpoints for inference.
 
@@ -123,7 +156,7 @@ Example:
 ![Training Curve](outputs/test3/bce_loss_curve.png)
 
 ## Inference
-Specify checkpoint path in config/dev.yaml and call it in inference script.
+- Specify checkpoint path in config/dev.yaml and call it in inference script.
 Run inference with:
 
       ```bash
@@ -132,19 +165,18 @@ Run inference with:
 - This will generate predictions (defect masks) for the given input images, calculate dice score and accuracy.
 - We use the validation set for testing and inference since we do not have a large number of samples in the overall dataset with defects to test our 'defect detection' model.
 
-### Mean dice and mean accuracy on validation set
+### Mean dice score on validation set
 
 | Metric        | Value (Test 2)  |  Value (Test 3) |
 |---------------|-----------------| --------------- |
 | Dice Score    |    0.0643       |     0.0763      |
-| Accuracy      |                 |                 |
 
 ---
 
 ### Dice score comparisons for individual defects (test 2 vs test 3)
 
- ![Defect predictions](outputs/test2/scratch1.png) 
- ![Defect predictions](outputs/test3/scratch1.png) 
+ ![Defect predictions](outputs/test2/scratch2.png) 
+ ![Defect predictions](outputs/test3/scratch2.png) 
 
 ## Observations
 - The dice scores for 'Scratch' defect performed improved from Test 2 to Test 3.
