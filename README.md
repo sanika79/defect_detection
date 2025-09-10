@@ -77,14 +77,14 @@ This project was tested with the following environment:
 
 ## Final processed dataset structure:
 
-      ```bash
-      processed_dataset/
-      │── train/
-      │    ├── images/
-      │    └── masks/
-      │── val/
-           ├── images/
-           └── masks/
+   ```bash
+   processed_dataset/
+   │── train/
+   │    ├── images/
+   │    └── masks/
+   │── val/
+        ├── images/
+        └── masks/
 
 ## Hence, run the following scripts
 
