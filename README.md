@@ -60,7 +60,9 @@ This project was tested with the following environment:
 ## Preprocessing Steps
 - Defective test images (test/hole and test/scratches) have binary masks in ground_truth/hole and ground_truth/scratches.
 - Good images have no defects, so they are paired with an empty black mask.
-- Images and masks are renamed with a consistent convention:
+- The dataset can be used for a Supervised Defect detection problem as we have the defect images and their corresponding mask annotations.
+  
+- Therefore, images and masks are renamed with a consistent convention:
 
    ```bash
    000_good.png mapped to 000_good_mask.png
@@ -96,13 +98,18 @@ This project was tested with the following environment:
 
 
 
- ## Training
+ ### Training
 - Once preprocessing is complete, train the U-Net model:
 
      ```bash
      python u_net_train.py
 
 - Checkpoints are saved under the lightning_logs/ directory.
+
+## Loss function used while training
+
+- Since the dataset is highly imbalanced, the Soft Dice coefficient and the Soft Dice loss have been used to evaluate the validation performance of the model.
+- The episolon value in the Dice loss has come with experimentation.
 
 - Use the saved checkpoints for inference.
 
@@ -121,33 +128,35 @@ Below are placeholders for results (to be updated with actual outputs):
 
 ### Training Curves  
 
-Model outputs present in outputs/ directory
-
-_Add plots for training/validation loss, IoU, Dice score here._  
+- Several tests were conducted to tune the U-net model with the best hyperparameters.
+- Model outputs present in outputs/ directory
+ 
 
 Example:  
 ![Training Curve](outputs/test3/dice_loss_curve.png)  
+![Training Curve](outputs/test3/bce_loss_curve.png)
 
 ---
 
-### Quantitative Metrics  
+### Quantitative Metrics for a sample image
 
-| Metric        | Value (Example) |
-|---------------|-----------------|
-| IoU (val)     | 0.78            |
-| Dice Score    | 0.85            |
-| Accuracy      | 0.92            |
+| Metric        | Value (Test 2)  |  Value (Test 3) |
+|---------------|-----------------| --------------- |
+| Dice Score    |                 |                 |
+| Accuracy      |                 |                 |
 
 ---
 
 ### Sample Predictions  
-_Add before/after comparison images showing defect masks._  
 
-Example:  
+ ![Defect predictions](outputs/test3/scratch1.png) 
+  ![Defect predictions](outputs/test3/hole1.png) 
 
-| Input Image | Ground Truth | Prediction |
-|-------------|--------------|------------|
-| ![input](results/input.png) | ![gt](results/ground_truth.png) | ![pred](results/prediction.png) |
+## Conclusions
+- The 'Scratch' defect performed really well in Test 3.
+- 
+
+
 
 
 ## Summary
