@@ -208,6 +208,20 @@ Run inference with:
 
 - The training curves look very noisy especially for dice loss.
 - It is also failing to converege. This suggests that model is not generalizing well to the validation set.
+
+## Bracket brown inference results
+
+- True positives
+![Defect predictions](outputs/bracket_brown/tp1.png) 
+![Defect predictions](outputs/bracket_brown/tp2.png)
+![Defect predictions](outputs/bracket_brown/tp3.png) 
+![Defect predictions](outputs/bracket_brown/tp4.png)
+
+- False positive
+![Defect predictions](outputs/bracket_brown/fp1.png)
+
+- False negative
+![Defect predictions](outputs/bracket_brown/fn1.png)
   
 
 
