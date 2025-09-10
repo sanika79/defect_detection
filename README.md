@@ -198,6 +198,10 @@ Run inference with:
 - Test 2 (trained on fewer epochs) had more false positives than Test 3.
 
 
+### Training on different dataset - bracket_brown
+
+![Defect predictions](outputs/bracket_brown/dice_loss_curve.png) 
+![Defect predictions](outputs/bracket_brown/bce_loss_curve.png)
 
 
 ## Summary
