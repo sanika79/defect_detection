@@ -73,17 +73,17 @@ This project was tested with the following environment:
 
 ## Final processed dataset structure:
 
-   ```bash
-   processed_dataset/
-   │── train/
-   │    ├── images/
-   │    └── masks/
-   │── val/
-        ├── images/
-        └── masks/
-   
+      ```bash
+      processed_dataset/
+      │── train/
+      │    ├── images/
+      │    └── masks/
+      │── val/
+           ├── images/
+           └── masks/
 
 ## Dataset Scripts
+
 - prepare_dataset.py → Creates processed train/val splits.
 - img_mask_matching.py → Verifies correct image-to-mask mappings.
 
@@ -97,11 +97,11 @@ This project was tested with the following environment:
 
 - Use the saved checkpoints for inference.
 
-Inference
+## Inference
 Run inference with:
 
-   ```bash
-   python u_net_infer.py --checkpoint <path_to_checkpoint>
+      ```bash
+      python u_net_infer.py --checkpoint <path_to_checkpoint>
 
 - This will generate predictions (defect masks) for the given input images.
 
