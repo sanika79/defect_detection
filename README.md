@@ -107,6 +107,38 @@ python u_net_infer.py --checkpoint <path_to_checkpoint>
 
 - This will generate predictions (defect masks) for the given input images.
 
+## Results  
+
+Below are placeholders for results (to be updated with actual outputs):  
+
+### Training Curves  
+_Add plots for training/validation loss, IoU, Dice score here._  
+
+Example:  
+![Training Curve](results/training_curve.png)  
+
+---
+
+### Quantitative Metrics  
+
+| Metric        | Value (Example) |
+|---------------|-----------------|
+| IoU (val)     | 0.78            |
+| Dice Score    | 0.85            |
+| Accuracy      | 0.92            |
+
+---
+
+### Sample Predictions  
+_Add before/after comparison images showing defect masks._  
+
+Example:  
+
+| Input Image | Ground Truth | Prediction |
+|-------------|--------------|------------|
+| ![input](results/input.png) | ![gt](results/ground_truth.png) | ![pred](results/prediction.png) |
+
+
 ## Summary
 - Dataset preparation ensures correct mapping of images and masks.
 
