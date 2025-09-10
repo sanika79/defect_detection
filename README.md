@@ -253,6 +253,34 @@ Model trained on --> Bracket black dataset to infer on Bracket brown validation 
 
 - The model is probably trying to detect features that resemble holes or scratches in the unseen dataset.
 
+### Attention U-net
+
+- I implemented this network because the attention block computes an attention map which helps the model focus on relevant spatial regions during upsampling.
+- This is useful because our dataset has images with very few foreground pixels for defects.
+- It adds 2 signals - gating signal g comes from the decoder and the other one comes from the skip connections.
+
+     ```bash
+     python att_unet_train.py
+
+     ```bash
+     python att_unet_infer.py
+
+### Attention U-net results
+
+![Defect predictions](outputs/att_unet/dice_loss_curve.png) 
+![Defect predictions](outputs/att_unet/bce_loss_curve.png)
+
+![Defect predictions](outputs/att_unet/scratch2.png)
+![Defect predictions](outputs/att_unet/scratch3.png)
+![Defect predictions](outputs/att_unet/scratch4.png)
+
+### Mean dice score comparision
+
+| Metric        | U-net  |  Attention U-net |
+|---------------|-----------------| --------------- |
+| Mean Dice Score    |    0.0763       |     0.0812      |
+
+
 
 
 ## Summary
