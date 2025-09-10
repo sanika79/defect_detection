@@ -1,6 +1,7 @@
 # Computer Vision Project: Defect Detection  
 
-This project implements **defect detection in mechanical components** using a **U-Net segmentation model**.  
+- This project implements a semantic segmentation task where the goal is to identify and segment regions of defects (such as holes or scratches) in images of objects.
+- A U-Net model is used to predict a mask highlighting defect areas, distinguishing them from non-defective (good) regions.  
 
 It covers:  
 - Environment setup with Torch + CUDA support  
@@ -157,7 +158,12 @@ Run inference with:
    ```bash
    python u_net_infer.py 
 
-- This will generate predictions (defect masks) for the given input images, calculate dice score and accuracy.
+- This will generate predictions (defect masks) for the given input images and also calculate dice score and accuracy.
+
+
+### What is expected?
+- The model should detect defect areas in the form of masks and return an empty black image for non-defective images.
+
 - We use the validation set for testing and inference since we do not have a large number of samples in the overall dataset with defects to test our 'defect detection' model.
 
 ### Mean dice score on validation set
@@ -166,7 +172,6 @@ Run inference with:
 |---------------|-----------------| --------------- |
 | Mean Dice Score    |    0.0643       |     0.0763      |
 
----
 
 ### Dice score comparisons for individual defects (test 2 vs test 3)
 
@@ -176,6 +181,9 @@ Run inference with:
  ![Defect predictions](outputs/test2/scratch1.png) 
  ![Defect predictions](outputs/test3/scratch1.png) 
 
+ ### Few False positives from Test 2
+![Defect predictions](outputs/test2/hole_false_positive.png) 
+![Defect predictions](outputs/test2/good_false_positive.png)
 
 ## Observations
 - The dice scores for 'Scratch' defect performed improved from Test 2 to Test 3.
