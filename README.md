@@ -24,6 +24,8 @@ This project was tested with the following environment:
 1. Clone the repository:  
    ```bash
    git clone https://github.com/sanika79/defect_detection.git
+
+   ```bash
    cd defect_detection
 
 2. (Optional) Set Python version with pyenv:
@@ -41,7 +43,7 @@ This project was tested with the following environment:
 5. Update paths in config/dev.yaml for raw and processed data. (Paths are kept as generic as possible.)
 
 ## Dataset Preprocessing
-- Out of the six provided mechanical components, this project focuses on bracket_black.
+- Out of the six provided mechanical components, this project focuses on **bracket_black**.
 
 - Original dataset structure:
 
@@ -202,6 +204,10 @@ Run inference with:
 
 ![Defect predictions](outputs/bracket_brown/dice_loss_curve.png) 
 ![Defect predictions](outputs/bracket_brown/bce_loss_curve.png)
+
+- The training curves look very noisy especially for dice loss.
+- It is also failing to converege. This suggests that model is not generalizing well to the validation set.
+  
 
 
 ## Summary
