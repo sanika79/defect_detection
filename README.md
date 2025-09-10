@@ -264,11 +264,17 @@ Model trained on --> Bracket black dataset to infer on Bracket brown validation 
 ![Defect predictions](outputs/att_unet/dice_loss_curve.png) 
 ![Defect predictions](outputs/att_unet/bce_loss_curve.png)
 
-![Defect predictions](outputs/test3/scratch3.png)
-![Defect predictions](outputs/test3/scratch3.png)
 ![Defect predictions](outputs/att_unet/scratch2.png)
-![Defect predictions](outputs/att_unet/scratch3.png)
 ![Defect predictions](outputs/att_unet/scratch4.png)
+
+### Comparison with U-net
+
+![Defect predictions](outputs/test3/scratch2.png)
+- U-net 
+![Defect predictions](outputs/test3/scratch3.png)
+- Attention U-net
+![Defect predictions](outputs/att_unet/scratch3.png)
+
 
 ### Mean dice score comparision
 
