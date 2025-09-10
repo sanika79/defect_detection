@@ -186,8 +186,9 @@ Run inference with:
 ![Defect predictions](outputs/test2/good_false_positive.png)
 
 ## Observations
+
 - The dice scores for 'Scratch' defect performed improved from Test 2 to Test 3.
-- Test 2 (trained on fewer epochs) had more false positives than Test
+- Test 2 (trained on fewer epochs) had more false positives than Test 3.
 
 
 
